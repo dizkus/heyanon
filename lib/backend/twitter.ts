@@ -36,7 +36,14 @@ const authHeader = oauth.toHeader(
 
 // NOTE: currently only works with the keys set in process.env
 async function postTweet(message: string) {
-  let resp = await got.post(endpointURL, {
+  let resp: {
+    statusCode: number;
+    body: {
+      data: {
+        id: number;
+      };
+    };
+  } = await got.post(endpointURL, {
     json: { text: message },
     responseType: "json",
     headers: {
@@ -49,7 +56,7 @@ async function postTweet(message: string) {
   if (resp.statusCode !== 201) {
     throw new Error("error posting tweet");
   } else {
-    const tweetID = resp["body"]["data"]["id"];
+    const tweetID = resp.body.data.id;
     const tweetURL = `https://twitter.com/${twitterAccount}/status/${tweetID}`;
     return tweetURL;
   }
