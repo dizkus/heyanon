@@ -7,6 +7,8 @@ import { vkey } from "../vkey";
 const localforage = require("localforage");
 const snarkjs = require("snarkjs");
 
+const wc = require("./witnessCalculator");
+
 const loadURL = "https://d27ahxc61uj811.cloudfront.net/";
 
 async function downloadFromFilename(filename: string) {
@@ -38,6 +40,28 @@ export const downloadProofFiles = async function (filename: string) {
   }
   await Promise.all(filePromises);
 };
+
+export async function generateWitness(input: any, filename: string) {
+  const calc = await wc(`../${filename}.wasm`);
+  const witness = await calc.calculateWitness(input);
+
+  console.log(`created witness of size ${witness.length}`);
+
+  // NOTE: doesn't output witness, just creates file
+  // await snarkjs.wtns.calculate(input, `../${filename}.wasm`);
+
+  // const buffer = readFileSync(process.argv[2]);
+  // wc(buffer).then(async witnessCalculator => {
+  // //    const w= await witnessCalculator.calculateWitness(input,0);
+  // //    for (let i=0; i< w.length; i++){
+  // //	console.log(w[i]);
+  // //    }
+  // const buff= await witnessCalculator.calculateWTNSBin(input,0);
+  // writeFile(process.argv[4], buff, function(err) {
+  //     if (err) throw err;
+  // });
+  //   });
+}
 
 export async function generateProof(input: any, filename: string) {
   // TODO: figure out how to generate this s.t. it passes build

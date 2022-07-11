@@ -15,6 +15,7 @@ const DynamicReactJson = dynamic(import("react-json-view"), { ssr: false });
 import { setupWeb3 } from "../../lib/frontend/web3";
 import {
   buildInput,
+  generateWitness,
   generateProof,
   downloadProofFiles,
 } from "../../lib/frontend/zkp";
@@ -161,18 +162,21 @@ const PostMsgPage = () => {
         )
       );
 
-      setStage(Stage.INPROGRESS);
+      await generateWitness(input, filename);
 
-      setLoadingMessage("Downloading proving key");
-      await downloadProofFiles(filename);
+      // NOTE: temporarily removed
+      // setStage(Stage.INPROGRESS);
 
-      setLoadingMessage("Generating proof");
-      const { proof, publicSignals } = await generateProof(input, filename);
+      // setLoadingMessage("Downloading proving key");
+      // await downloadProofFiles(filename);
 
-      setProof(proof);
-      setPublicSignals(publicSignals);
+      // setLoadingMessage("Generating proof");
+      // const { proof, publicSignals } = await generateProof(input, filename);
 
-      setStage(Stage.SUBMIT);
+      // setProof(proof);
+      // setPublicSignals(publicSignals);
+
+      // setStage(Stage.SUBMIT);
     };
 
     genProofAsync();
